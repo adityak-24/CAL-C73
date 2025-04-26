@@ -1,5 +1,5 @@
 # CAL-C73
-A ultra-high precision calculator with mind-blowing limits .
+A ultra-high precision calculator with mind-blowing limits.
 
 # Short Description
 This project is a graphical calculator with ultra-high precision built using Java Swing.
