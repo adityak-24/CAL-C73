@@ -1,0 +1,2055 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
+public class CalculatorGUI
+{
+private JFrame frame;
+private JTextArea display;
+private JScrollPane scrollPane;
+private StringBuilder input;
+static String Dummy4="",Dummy5="",Dummy6="",Dummy7="";
+static int Dummy8[];
+static int Dummy9[];
+static int Dummy12=0,Dummy13=0;
+public CalculatorGUI()
+{
+frame = new JFrame("Calculator");
+frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+frame.setSize(400, 500);
+frame.setLayout(new BorderLayout());
+input = new StringBuilder();
+display = new JTextArea(2, 20);
+display.setFont(new Font("Arial", Font.BOLD, 20));
+display.setEditable(false);
+scrollPane = new JScrollPane(display);
+scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+frame.add(scrollPane, BorderLayout.NORTH);
+JPanel buttonPanel = new JPanel();
+buttonPanel.setLayout(new GridLayout(4, 4, 5, 5));
+String[] buttons = {"7","8", "9", "+", "-", "4", "5", "6", "*", "/", "1", "2", "3", "%", ".", "0", "^", "!", "Enter", "C"};
+for (String text : buttons)
+{
+JButton button = new JButton(text);
+button.setFont(new Font("Arial", Font.BOLD, 20));
+button.addActionListener(new ButtonClickListener());
+buttonPanel.add(button);
+}
+frame.add(buttonPanel, BorderLayout.CENTER);
+frame.setVisible(true);
+}
+private class ButtonClickListener implements ActionListener
+{
+@Override
+public void actionPerformed(ActionEvent e)
+{
+String command = ((JButton) e.getSource()).getText();
+if (command.equals("C"))
+{
+input.setLength(0);
+display.setText("");
+}
+else if (command.equals("Enter"))
+{
+try
+{
+String result = performCalculation(input.toString());
+display.append(" = " + result + "\n");
+input.setLength(0);
+}
+catch (Exception ex)
+{
+display.append("\nError!\n");
+}
+}
+else
+{
+input.append(command);
+display.append(command);
+}
+}
+}
+private String performCalculation(String expr)
+{
+if (expr.contains("!"))
+{
+return Factorial(expr);
+}
+else if (expr.contains("*"))
+{
+return Multiplication(expr);
+}
+else if (expr.contains("/"))
+{
+return Division(expr);
+}
+else if (expr.contains("%"))
+{
+return Remainder(expr);
+}
+else if (expr.contains("^"))
+{
+return Power(expr);
+}
+else if (expr.contains("+"))
+{
+return Addition(expr);
+}
+else if (expr.contains("-"))
+{
+return Subtraction(expr);
+}
+return "Error";
+}
+private String Division(String Input)
+{
+String Divisor="",Dividend="",D_Dummy2="",D_Dummy3="",S1="",S2="", Quotient="";
+int DIVISOR[],DIVIDEND[],Dummy1[],Dummy2[],Dummy3[];
+int N=0,l=0,d1=0,d2=0,D_Dummy1=-1,D_Dummy4=-1,D_Dummy5=-1;
+int n=100,g=0,h=0,f=0;
+boolean D_Dummy6=false,D_Dummy7=false;
+for ( int i=0;i<Input.length();i++ )
+{
+if ( Input.charAt(i)=='/' )
+{
+D_Dummy1=i;
+break;
+}
+}
+if ( (Input.charAt(D_Dummy1-1)>=48 && Input.charAt(D_Dummy1-1)<=57 && Input.charAt(D_Dummy1+1)=='-') || (Input.charAt(D_Dummy1-1)>=48 && Input.charAt(D_Dummy1-1)<=57 && Input.charAt(D_Dummy1+1)>=48 && Input.charAt(D_Dummy1+1)<=57) )
+{
+D_Dummy2=Input.substring(0,D_Dummy1);
+D_Dummy3=Input.substring(D_Dummy1+1,Input.length());
+if ( D_Dummy2.charAt(0)=='-' )
+{
+D_Dummy6=true;
+D_Dummy2=D_Dummy2.substring(1,D_Dummy2.length());
+}
+if ( D_Dummy3.charAt(0)=='-' )
+{
+D_Dummy7=true;
+D_Dummy3=D_Dummy3.substring(1,D_Dummy3.length());
+}
+for ( int i=0;i<D_Dummy2.length();i++ )
+{
+if ( D_Dummy2.charAt(i)=='.' )
+{
+D_Dummy4=i;
+break;
+}
+}
+for ( int i=0;i<D_Dummy3.length();i++ )
+{
+if ( D_Dummy3.charAt(i)=='.' )
+{
+D_Dummy5=i;
+break;
+}
+}
+if (D_Dummy4!=-1)
+{
+f=D_Dummy2.substring(D_Dummy4+1,D_Dummy2.length()).length();
+}
+else
+{
+f=0;
+}
+if (D_Dummy5!=-1)
+{
+g=D_Dummy3.substring(D_Dummy5+1,D_Dummy3.length()).length();
+}
+else
+{
+g=0;
+}
+if ( D_Dummy4!=-1)
+{
+D_Dummy2=D_Dummy2.substring(0,D_Dummy4)+D_Dummy2.substring(D_Dummy4+1,D_Dummy2.length());
+}
+if ( D_Dummy5!=-1)
+{
+D_Dummy3=D_Dummy3.substring(0,D_Dummy5)+D_Dummy3.substring(D_Dummy5+1,D_Dummy3.length());
+}
+D_Dummy2='0'+D_Dummy2;
+D_Dummy3='0'+D_Dummy3;
+S1=D_Dummy3;
+S2=D_Dummy2;
+Divisor=S1;
+Dividend=S2;
+N=n;
+d1=Divisor.length();
+d2=Dividend.length();
+DIVISOR=new int[S1.length()];
+DIVIDEND=new int[S2.length()+n];
+Dummy1=new int[S1.length()];
+Dummy2=new int[S1.length()];
+Dummy3=new int[S1.length()];
+Convert1(Divisor,DIVISOR);
+Convert1(Dividend,DIVIDEND);
+for (int i=0;i<Dummy1.length;i++ )
+{
+Dummy1[i]=DIVISOR[i];
+Dummy2[i]=DIVIDEND[i];
+l=i;
+}
+for ( int k=0;l!=DIVIDEND.length-1;k++ )
+{
+int j=0;
+for ( int i=9;i>=0;i-- )
+{
+for ( int m=Dummy1.length-1;m>=0;m-- )
+{
+Dummy1[m]=0;
+}
+for ( int m=DIVISOR.length-1;m>=0;m-- )
+{
+Dummy1[m]=DIVISOR[m]*i;
+}
+for ( int m=Dummy1.length-1;m>0;m-- )
+{
+Dummy1[m-1]+=Dummy1[m]/10;
+Dummy1[m]=Dummy1[m]%10;
+}
+if ( Compare1(Dummy2,Dummy1)==true )
+{
+j=i;
+break;
+}
+}
+if (d1==d2 && k==1)
+{
+Quotient=Quotient+".";
+}
+if ( d2>d1 && k==d2-d1+1 )
+{
+Quotient=Quotient+".";
+}
+if ( d1>d2 && k==2 )
+{
+Quotient=Quotient+".";
+}
+if (j!=0)
+{
+Quotient=Quotient+((char)(j+48));
+for ( int i=Dummy2.length-1;i>0;i--)
+{
+if ( Dummy2[i]>=Dummy1[i] )
+{
+Dummy3[i]=Dummy2[i]-Dummy1[i];
+}
+else
+{
+Dummy2[i-1]=Dummy2[i-1]-1;
+Dummy3[i]=Dummy2[i]+10-Dummy1[i];
+}
+}
+for ( int i=0;i<Dummy1.length;i++ )
+{
+Dummy2[i]=0;
+}
+for ( int i=0;i<Dummy1.length;i++ )
+{
+Dummy2[i]=Dummy3[i];
+}
+for ( int i=1;i<Dummy2.length;i++ )
+{
+Dummy2[i-1]=Dummy2[i];
+}
+Dummy2[Dummy2.length-1]=DIVIDEND[++l];
+}
+else
+{
+Quotient=Quotient+"O";
+for ( int i=1;i<Dummy2.length;i++ )
+{
+Dummy2[i-1]=Dummy2[i];
+}
+Dummy2[Dummy2.length-1]=DIVIDEND[++l];
+}
+}
+if ( d1>d2 && g-f==0 )
+{
+Quotient=Quotient+"X ((10)^"+(d2-d1-1)+")";
+}
+else if ( d1>d2 && g-f!=0 )
+{
+Quotient=Quotient+"X ((10)^"+(d2-d1-1+g-f)+")";
+}
+else if ( d1<=d2 && g-f!=0 )
+{
+Quotient=Quotient+"X ((10)^"+(g-f)+")";
+}
+if (D_Dummy6!=D_Dummy7)
+{
+Quotient='-'+Quotient;
+}
+return Quotient;
+}
+else if (D_Dummy1==-1)
+{
+return "Error";
+}
+else
+{
+return "Error";
+}
+}
+private void Convert1 ( String S, int A[] )
+{
+for ( int i=0;i<S.length();i++ )
+{
+A[i]=S.charAt(i)-48;
+}
+}
+private boolean Compare1 ( int A[], int B[] )
+{
+boolean t=true;
+for ( int i=0;i<A.length;i++ )
+{
+if ( A[i]<B[i] )
+{
+t=false;
+break;
+}
+else if ( A[i]>B[i] )
+{
+t=true;
+break;
+}
+}
+return t;
+}
+private String Factorial(String Input)
+{
+int F_Dummy12=0, F_Dummy14=0;
+String F_Dummy2="", F_Dummy3="1",Factorial="";
+String F_Dummy8[][];
+int F_Dummy13[][];
+int F_Dummy9[],F_Dummy10[];
+long F_Dummy11[];
+String Table[][]=new String[10][10];
+Table[0][0]="00";
+Table[0][1]="00";
+Table[0][2]="00";
+Table[0][3]="00";
+Table[0][4]="00";
+Table[0][5]="00";
+Table[0][6]="00";
+Table[0][7]="00";
+Table[0][8]="00";
+Table[0][9]="00";
+Table[1][0]="00";
+Table[1][1]="01";
+Table[1][2]="02";
+Table[1][3]="03";
+Table[1][4]="04";
+Table[1][5]="05";
+Table[1][6]="06";
+Table[1][7]="07";
+Table[1][8]="08";
+Table[1][9]="09";
+Table[2][0]="00";
+Table[2][1]="02";
+Table[2][2]="04";
+Table[2][3]="06";
+Table[2][4]="08";
+Table[2][5]="10";
+Table[2][6]="12";
+Table[2][7]="14";
+Table[2][8]="16";
+Table[2][9]="18";
+Table[3][0]="00";
+Table[3][1]="03";
+Table[3][2]="06";
+Table[3][3]="09";
+Table[3][4]="12";
+Table[3][5]="15";
+Table[3][6]="18";
+Table[3][7]="21";
+Table[3][8]="24";
+Table[3][9]="27";
+Table[4][0]="00";
+Table[4][1]="04";
+Table[4][2]="08";
+Table[4][3]="12";
+Table[4][4]="16";
+Table[4][5]="20";
+Table[4][6]="24";
+Table[4][7]="28";
+Table[4][8]="32";
+Table[4][9]="36";
+Table[5][0]="00";
+Table[5][1]="05";
+Table[5][2]="10";
+Table[5][3]="15";
+Table[5][4]="20";
+Table[5][5]="25";
+Table[5][6]="30";
+Table[5][7]="35";
+Table[5][8]="40";
+Table[5][9]="45";
+Table[6][0]="00";
+Table[6][1]="06";
+Table[6][2]="12";
+Table[6][3]="18";
+Table[6][4]="24";
+Table[6][5]="30";
+Table[6][6]="36";
+Table[6][7]="42";
+Table[6][8]="48";
+Table[6][9]="54";
+Table[7][0]="00";
+Table[7][1]="07";
+Table[7][2]="14";
+Table[7][3]="21";
+Table[7][4]="28";
+Table[7][5]="35";
+Table[7][6]="42";
+Table[7][7]="49";
+Table[7][8]="56";
+Table[7][9]="63";
+Table[8][0]="00";
+Table[8][1]="08";
+Table[8][2]="16";
+Table[8][3]="24";
+Table[8][4]="32";
+Table[8][5]="40";
+Table[8][6]="48";
+Table[8][7]="56";
+Table[8][8]="64";
+Table[8][9]="72";
+Table[9][0]="00";
+Table[9][1]="09";
+Table[9][2]="18";
+Table[9][3]="27";
+Table[9][4]="36";
+Table[9][5]="45";
+Table[9][6]="54";
+Table[9][7]="63";
+Table[9][8]="72";
+Table[9][9]="81";
+if ( Input.charAt(Input.length()-1)=='!' && Input.indexOf('.')==-1 && Input.indexOf('-')==-1 )
+{
+F_Dummy2=Input.substring(0,Input.length()-1);
+for ( int i=0;i<Input.length()-1;i++ )
+{
+F_Dummy14=(F_Dummy14*10)+(((int)(Input.charAt(i)))-48);
+}
+for ( int i=1;i<=F_Dummy14;i++ )
+{
+F_Dummy2="";
+for ( int j=i;j!=0;j/=10 )
+{
+F_Dummy2=((char)((j%10)+48))+F_Dummy2;
+}
+F_Dummy8=new String[F_Dummy2.length()][F_Dummy3.length()];
+F_Dummy9=new int[F_Dummy2.length()];
+F_Dummy10=new int[F_Dummy3.length()];
+for ( int j=0;j<F_Dummy2.length();j++ )
+{
+F_Dummy9[j]= ((int)(F_Dummy2.charAt(j)))-48;
+}
+for ( int j=0;j<F_Dummy3.length();j++ )
+{
+F_Dummy10[j]= ((int)(F_Dummy3.charAt(j)))-48;
+}
+for ( int k=0;k<F_Dummy3.length();k++ )
+{
+for ( int j=0;j<F_Dummy2.length();j++ )
+{
+F_Dummy8[j][k]=Table[F_Dummy9[j]][F_Dummy10[k]];
+}
+}
+F_Dummy11=new long[F_Dummy9.length+F_Dummy10.length];
+F_Dummy13=new int[2*Math.min(F_Dummy2.length(),F_Dummy3.length())][F_Dummy2.length()+F_Dummy3.length()];
+for (int l=0;l<F_Dummy11.length;l++)
+{
+F_Dummy12=0;
+for (int j=0;j<F_Dummy9.length;j++ )
+{
+for (int k=0;k<F_Dummy10.length;k++ )
+{
+if (j+k==l)
+{
+F_Dummy13[F_Dummy12++][l]=((int)(F_Dummy8[j][k].charAt(0)))-48;
+}
+if (j+k==l-1)
+{
+F_Dummy13[F_Dummy12++][l]=((int)(F_Dummy8[j][k].charAt(1)))-48;
+}
+}
+}
+}
+F_Dummy12=0;
+for (int k=0;k<F_Dummy9.length+F_Dummy10.length;k++ )
+{
+for ( int j=0;j<2*Math.min(F_Dummy9.length,F_Dummy10.length);j++ )
+{
+F_Dummy11[F_Dummy12]=F_Dummy11[F_Dummy12]+F_Dummy13[j][k];
+}
+F_Dummy12++;
+}
+for ( int j=F_Dummy9.length+F_Dummy10.length-1;j>0;j-- )
+{
+if (F_Dummy11[j]>9)
+{
+F_Dummy11[j-1]=F_Dummy11[j-1]+(F_Dummy11[j]/10);
+F_Dummy11[j]=F_Dummy11[j]%10;
+}
+}
+Factorial="";
+for ( int j=0;j<F_Dummy9.length+F_Dummy10.length;j++ )
+{
+if ( F_Dummy11[j]!=0 )
+{
+F_Dummy12=j;
+break;
+}
+}
+for ( int j=F_Dummy12;j<F_Dummy9.length+F_Dummy10.length;j++ )
+{
+Factorial=Factorial+((char)((F_Dummy11[j])+48));
+}
+F_Dummy3=Factorial;
+}
+return Factorial;
+}
+else
+{
+return "Error";
+}
+}
+private String Addition(String Input)
+{
+int A_Dummy1=-1, A_Dummy4=-1, A_Dummy5=-1, A_Dummy10=0, A_Dummy12=0, A_Dummy13=0;
+String A_Dummy2="", A_Dummy3="",Sum="";
+boolean A_Dummy6=false, A_Dummy7=false;
+int A_Dummy8[],A_Dummy9[],A_Dummy11[];
+for ( int i=0;i<Input.length();i++ )
+{
+if ( Input.charAt(i)=='+' )
+{
+A_Dummy1=i;
+break;
+}
+}
+if ( (Input.charAt(A_Dummy1-1)>=48 && Input.charAt(A_Dummy1-1)<=57 && Input.charAt(A_Dummy1+1)=='-') || (Input.charAt(A_Dummy1-1)>=48 && Input.charAt(A_Dummy1-1)<=57 && Input.charAt(A_Dummy1+1)>=48 && Input.charAt(A_Dummy1+1)<=57) )
+{
+A_Dummy2=Input.substring(0,A_Dummy1);
+A_Dummy3=Input.substring(A_Dummy1+1,Input.length());
+if ( A_Dummy2.charAt(0)=='-' )
+{
+A_Dummy6=true;
+A_Dummy2=A_Dummy2.substring(1,A_Dummy2.length());
+}
+if ( A_Dummy3.charAt(0)=='-' )
+{
+A_Dummy7=true;
+A_Dummy3=A_Dummy3.substring(1,A_Dummy3.length());
+}
+for ( int i=0;i<A_Dummy2.length();i++ )
+{
+if ( A_Dummy2.charAt(i)=='.' )
+{
+A_Dummy4=i;
+break;
+}
+}
+for ( int i=0;i<A_Dummy3.length();i++ )
+{
+if ( A_Dummy3.charAt(i)=='.' )
+{
+A_Dummy5=i;
+break;
+}
+}
+if ( A_Dummy4==-1 && A_Dummy5==-1 )
+{
+A_Dummy8=new int[Math.max(A_Dummy2.length(),A_Dummy3.length())];
+A_Dummy9=new int[Math.max(A_Dummy2.length(),A_Dummy3.length())];
+A_Dummy11=new int[Math.max(A_Dummy2.length(),A_Dummy3.length())];
+A_Dummy10=A_Dummy8.length-1;
+for ( int i=A_Dummy2.length()-1;i>=0;i--)
+{
+A_Dummy8[A_Dummy10]=((int)(A_Dummy2.charAt(i)))-48;
+A_Dummy10=A_Dummy10-1;
+}
+A_Dummy10=A_Dummy9.length-1;
+for ( int i=A_Dummy3.length()-1;i>=0;i--)
+{
+A_Dummy9[A_Dummy10]=((int)(A_Dummy3.charAt(i)))-48;
+A_Dummy10=A_Dummy10-1;
+}
+}
+else if ( A_Dummy4!=-1 && A_Dummy5==-1 )
+{
+A_Dummy8=new int[Math.max(A_Dummy4,A_Dummy3.length())+A_Dummy2.length()-A_Dummy4-1];
+A_Dummy9=new int[Math.max(A_Dummy4,A_Dummy3.length())+A_Dummy2.length()-A_Dummy4-1];
+A_Dummy11=new int[Math.max(A_Dummy4,A_Dummy3.length())+A_Dummy2.length()-A_Dummy4-1];
+A_Dummy13=A_Dummy2.length()-A_Dummy4-1;
+A_Dummy10=A_Dummy8.length-1;
+for ( int i=A_Dummy2.length()-1;i>=0;i-- )
+{
+if ( A_Dummy2.charAt(i)!='.' )
+{
+A_Dummy8[A_Dummy10]=((int)(A_Dummy2.charAt(i)))-48;
+A_Dummy10=A_Dummy10-1;
+}
+}
+A_Dummy10=Math.max(A_Dummy4,A_Dummy3.length())-1;
+for (int i=A_Dummy3.length()-1;i>=0;i--)
+{
+A_Dummy9[A_Dummy10]=((int)(A_Dummy3.charAt(i)))-48;
+A_Dummy10=A_Dummy10-1;
+}
+}
+else if ( A_Dummy4==-1 && A_Dummy5!=-1 )
+{
+A_Dummy8=new int[Math.max(A_Dummy5,A_Dummy2.length())+A_Dummy3.length()-A_Dummy5-1];
+A_Dummy9=new int[Math.max(A_Dummy5,A_Dummy2.length())+A_Dummy3.length()-A_Dummy5-1];
+A_Dummy11=new int[Math.max(A_Dummy5,A_Dummy2.length())+A_Dummy3.length()-A_Dummy5-1];
+A_Dummy13=A_Dummy3.length()-A_Dummy5-1;
+A_Dummy10=A_Dummy9.length-1;
+for ( int i=A_Dummy3.length()-1;i>=0;i-- )
+{
+if ( A_Dummy3.charAt(i)!='.' )
+{
+A_Dummy9[A_Dummy10]=((int)(A_Dummy3.charAt(i)))-48;
+A_Dummy10=A_Dummy10-1;
+}
+}
+A_Dummy10=Math.max(A_Dummy5,A_Dummy2.length())-1;
+for (int i=A_Dummy2.length()-1;i>=0;i--)
+{
+A_Dummy8[A_Dummy10]=((int)(A_Dummy2.charAt(i)))-48;
+A_Dummy10=A_Dummy10-1;
+}
+}
+else
+{
+A_Dummy8=new int[Math.max(A_Dummy4,A_Dummy5)+Math.max(A_Dummy3.length()-A_Dummy5-1,A_Dummy2.length()-A_Dummy4-1)];
+A_Dummy9=new int[Math.max(A_Dummy4,A_Dummy5)+Math.max(A_Dummy3.length()-A_Dummy5-1,A_Dummy2.length()-A_Dummy4-1)];
+A_Dummy11=new int[Math.max(A_Dummy4,A_Dummy5)+Math.max(A_Dummy3.length()-A_Dummy5-1,A_Dummy2.length()-A_Dummy4-1)];
+A_Dummy13=Math.max(A_Dummy3.length()-A_Dummy5-1,A_Dummy2.length()-A_Dummy4-1);
+A_Dummy10=Math.max(A_Dummy4,A_Dummy5)-1;
+for (int i=A_Dummy4-1;i>=0;i--)
+{
+A_Dummy8[A_Dummy10]=((int)(A_Dummy2.charAt(i)))-48;
+A_Dummy10=A_Dummy10-1;
+}
+A_Dummy10=Math.max(A_Dummy4,A_Dummy5)-1;
+for (int i=A_Dummy5-1;i>=0;i--)
+{
+A_Dummy9[A_Dummy10]=((int)(A_Dummy3.charAt(i)))-48;
+A_Dummy10=A_Dummy10-1;
+}
+A_Dummy10=Math.max(A_Dummy4,A_Dummy5);
+for ( int i=A_Dummy4+1;i<A_Dummy2.length();i++ )
+{
+A_Dummy8[A_Dummy10]=((int)(A_Dummy2.charAt(i)))-48;
+A_Dummy10=A_Dummy10+1;
+}
+A_Dummy10=Math.max(A_Dummy4,A_Dummy5);
+for ( int i=A_Dummy5+1;i<A_Dummy3.length();i++ )
+{
+A_Dummy9[A_Dummy10]=((int)(A_Dummy3.charAt(i)))-48;
+A_Dummy10=A_Dummy10+1;
+}
+}
+if ( (A_Dummy6==true && A_Dummy7==true) || (A_Dummy6==false && A_Dummy7==false) )
+{
+for ( int i=A_Dummy8.length-1;i>=0;i-- )
+{
+A_Dummy11[i]=A_Dummy8[i]+A_Dummy9[i];
+}
+for ( int i=A_Dummy8.length-1;i>0;i-- )
+{
+A_Dummy11[i-1]=A_Dummy11[i-1]+(A_Dummy11[i]/10);
+A_Dummy11[i]=A_Dummy11[i]%10;
+}
+}
+else
+{
+for ( int i=0;i<A_Dummy8.length;i++ )
+{
+if ( A_Dummy8[i]>A_Dummy9[i] )
+{
+A_Dummy12=1;
+break;
+}
+else if (A_Dummy8[i]<A_Dummy9[i] )
+{
+A_Dummy12=-1;
+break;
+}
+}
+if ( A_Dummy12==0 )
+{
+Sum="0.0";
+}
+else if ( A_Dummy12==1 )
+{
+for ( int i=A_Dummy8.length-1;i>0;i-- )
+{
+if ( A_Dummy8[i]>=A_Dummy9[i] )
+{
+A_Dummy11[i]=A_Dummy8[i]-A_Dummy9[i];
+}
+else
+{
+A_Dummy11[i]=A_Dummy8[i]+10-A_Dummy9[i];
+A_Dummy8[i-1]=A_Dummy8[i-1]-1;
+}
+}
+A_Dummy11[0]=A_Dummy8[0]-A_Dummy9[0];
+}
+else
+{
+for ( int i=A_Dummy9.length-1;i>0;i-- )
+{
+if ( A_Dummy9[i]>=A_Dummy8[i] )
+{
+A_Dummy11[i]=A_Dummy9[i]-A_Dummy8[i];
+}
+else
+{
+A_Dummy11[i]=A_Dummy9[i]+10-A_Dummy8[i];
+A_Dummy9[i-1]=A_Dummy9[i-1]-1;
+}
+}
+A_Dummy11[0]=A_Dummy9[0]-A_Dummy8[0];
+}
+}
+for ( int i=0;i<A_Dummy11.length;i++ )
+{
+if ( i==0 )
+{
+for ( int j=A_Dummy11[0];j!=0;j/=10 )
+{
+Sum=((char)((j%10)+48))+Sum;
+}
+}
+else
+{
+Sum=Sum+((char)(A_Dummy11[i]+48));
+}
+}
+if (A_Dummy13!=0 )
+{
+Sum=Sum.substring(0,Sum.length()-A_Dummy13)+'.'+Sum.substring(Sum.length()-A_Dummy13,Sum.length());
+}
+if ( (A_Dummy6==true && A_Dummy7==true) || (A_Dummy6==true && A_Dummy7==false && A_Dummy12==1) || (A_Dummy6==false && A_Dummy7==true && A_Dummy12==-1) )
+{
+Sum='-'+Sum;
+}
+return Sum;
+}
+else if (A_Dummy1==-1)
+{
+return "Error";
+}
+else
+{
+return "Error";
+}
+}
+private String Subtraction(String Input)
+{
+Input=' '+Input;
+int S_Dummy1=-1, S_Dummy4=-1, S_Dummy5=-1, S_Dummy10=0, S_Dummy12=0,
+S_Dummy13=0;
+String S_Dummy2="", S_Dummy3="",Difference="";
+boolean S_Dummy6=false, S_Dummy7=false;
+int S_Dummy8[],S_Dummy9[],S_Dummy11[];
+for ( int i=1;i<Input.length();i++ )
+{
+if ( Input.charAt(i)=='-' && Input.charAt(i-1)!=' ' )
+{
+S_Dummy1=i;
+break;
+}
+}
+if ( (Input.charAt(S_Dummy1-1)>=48 && Input.charAt(S_Dummy1-1)<=57 && Input.charAt(S_Dummy1+1)=='-') || (Input.charAt(S_Dummy1-1)>=48 && Input.charAt(S_Dummy1-1)<=57 && Input.charAt(S_Dummy1+1)>=48 && Input.charAt(S_Dummy1+1)<=57) )
+{
+S_Dummy2=Input.substring(1,S_Dummy1);
+S_Dummy3=Input.substring(S_Dummy1+1,Input.length());
+if ( S_Dummy2.charAt(0)=='-' )
+{
+S_Dummy6=true;
+S_Dummy2=S_Dummy2.substring(1,S_Dummy2.length());
+}
+if ( S_Dummy3.charAt(0)=='-' )
+{
+S_Dummy7=true;
+S_Dummy3=S_Dummy3.substring(1,S_Dummy3.length());
+}
+for ( int i=0;i<S_Dummy2.length();i++ )
+{
+if ( S_Dummy2.charAt(i)=='.' )
+{
+S_Dummy4=i;
+break;
+}
+}
+for ( int i=0;i<S_Dummy3.length();i++ )
+{
+if ( S_Dummy3.charAt(i)=='.' )
+{
+S_Dummy5=i;
+break;
+}
+}
+if ( S_Dummy4==-1 && S_Dummy5==-1 )
+{
+S_Dummy8=new int[Math.max(S_Dummy2.length(),S_Dummy3.length())];
+S_Dummy9=new int[Math.max(S_Dummy2.length(),S_Dummy3.length())];
+S_Dummy11=new int[Math.max(S_Dummy2.length(),S_Dummy3.length())];
+S_Dummy10=S_Dummy8.length-1;
+for ( int i=S_Dummy2.length()-1;i>=0;i--)
+{
+S_Dummy8[S_Dummy10]=((int)(S_Dummy2.charAt(i)))-48;
+S_Dummy10=S_Dummy10-1;
+}
+S_Dummy10=S_Dummy9.length-1;
+for ( int i=S_Dummy3.length()-1;i>=0;i--)
+{
+S_Dummy9[S_Dummy10]=((int)(S_Dummy3.charAt(i)))-48;
+S_Dummy10=S_Dummy10-1;
+}
+}
+else if ( S_Dummy4!=-1 && S_Dummy5==-1 )
+{
+S_Dummy8=new int[Math.max(S_Dummy4,S_Dummy3.length())+S_Dummy2.length()-S_Dummy4-1];
+S_Dummy9=new int[Math.max(S_Dummy4,S_Dummy3.length())+S_Dummy2.length()-S_Dummy4-1];
+S_Dummy11=new int[Math.max(S_Dummy4,S_Dummy3.length())+S_Dummy2.length()-S_Dummy4-1];
+S_Dummy13=S_Dummy2.length()-S_Dummy4-1;
+S_Dummy10=S_Dummy8.length-1;
+for ( int i=S_Dummy2.length()-1;i>=0;i-- )
+{
+if ( S_Dummy2.charAt(i)!='.' )
+{
+S_Dummy8[S_Dummy10]=((int)(S_Dummy2.charAt(i)))-48;
+S_Dummy10=S_Dummy10-1;
+}
+}
+S_Dummy10=Math.max(S_Dummy4,S_Dummy3.length())-1;
+for (int i=S_Dummy3.length()-1;i>=0;i--)
+{
+S_Dummy9[S_Dummy10]=((int)(S_Dummy3.charAt(i)))-48;
+S_Dummy10=S_Dummy10-1;
+}
+}
+else if ( S_Dummy4==-1 && S_Dummy5!=-1 )
+{
+S_Dummy8=new int[Math.max(S_Dummy5,S_Dummy2.length())+S_Dummy3.length()-S_Dummy5-1];
+S_Dummy9=new int[Math.max(S_Dummy5,S_Dummy2.length())+S_Dummy3.length()-S_Dummy5-1];
+S_Dummy11=new int[Math.max(S_Dummy5,S_Dummy2.length())+S_Dummy3.length()-S_Dummy5-1];
+S_Dummy13=S_Dummy3.length()-S_Dummy5-1;
+S_Dummy10=S_Dummy9.length-1;
+for ( int i=S_Dummy3.length()-1;i>=0;i-- )
+{
+if ( S_Dummy3.charAt(i)!='.' )
+{
+S_Dummy9[S_Dummy10]=((int)(S_Dummy3.charAt(i)))-48;
+S_Dummy10=S_Dummy10-1;
+}
+}
+S_Dummy10=Math.max(S_Dummy5,S_Dummy2.length())-1;
+for (int i=S_Dummy2.length()-1;i>=0;i--)
+{
+S_Dummy8[S_Dummy10]=((int)(S_Dummy2.charAt(i)))-48;
+S_Dummy10=S_Dummy10-1;
+}
+}
+else
+{
+S_Dummy8=new int[Math.max(S_Dummy4,S_Dummy5)+Math.max(S_Dummy3.length()-S_Dummy5-1,S_Dummy2.length()-S_Dummy4-1)];
+S_Dummy9=new int[Math.max(S_Dummy4,S_Dummy5)+Math.max(S_Dummy3.length()-S_Dummy5-1,S_Dummy2.length()-S_Dummy4-1)];
+S_Dummy11=new int[Math.max(S_Dummy4,S_Dummy5)+Math.max(S_Dummy3.length()-S_Dummy5-1,S_Dummy2.length()-S_Dummy4-1)];
+S_Dummy13=Math.max(S_Dummy3.length()-S_Dummy5-1,S_Dummy2.length()-S_Dummy4-1);
+S_Dummy10=Math.max(S_Dummy4,S_Dummy5)-1;
+for (int i=S_Dummy4-1;i>=0;i--)
+{
+S_Dummy8[S_Dummy10]=((int)(S_Dummy2.charAt(i)))-48;
+S_Dummy10=S_Dummy10-1;
+}
+S_Dummy10=Math.max(S_Dummy4,S_Dummy5)-1;
+for (int i=S_Dummy5-1;i>=0;i--)
+{
+S_Dummy9[S_Dummy10]=((int)(S_Dummy3.charAt(i)))-48;
+S_Dummy10=S_Dummy10-1;
+}
+S_Dummy10=Math.max(S_Dummy4,S_Dummy5);
+for ( int i=S_Dummy4+1;i<S_Dummy2.length();i++ )
+{
+S_Dummy8[S_Dummy10]=((int)(S_Dummy2.charAt(i)))-48;
+S_Dummy10=S_Dummy10+1;
+}
+S_Dummy10=Math.max(S_Dummy4,S_Dummy5);
+for ( int i=S_Dummy5+1;i<S_Dummy3.length();i++ )
+{
+S_Dummy9[S_Dummy10]=((int)(S_Dummy3.charAt(i)))-48;
+S_Dummy10=S_Dummy10+1;
+}
+}
+if ( (S_Dummy6==true && S_Dummy7==false) || (S_Dummy6==false && S_Dummy7==true) )
+{
+for ( int i=S_Dummy8.length-1;i>=0;i-- )
+{
+S_Dummy11[i]=S_Dummy8[i]+S_Dummy9[i];
+}
+for ( int i=S_Dummy8.length-1;i>0;i-- )
+{
+S_Dummy11[i-1]=S_Dummy11[i-1]+(S_Dummy11[i]/10);
+S_Dummy11[i]=S_Dummy11[i]%10;
+}
+}
+else
+{
+for ( int i=0;i<S_Dummy8.length;i++ )
+{
+if ( S_Dummy8[i]>S_Dummy9[i] )
+{
+S_Dummy12=1;
+break;
+}
+else if (S_Dummy8[i]<S_Dummy9[i] )
+{
+S_Dummy12=-1;
+break;
+}
+}
+if ( S_Dummy12==0 )
+{
+Difference="0.0";
+}
+else if ( S_Dummy12==1 )
+{
+for ( int i=S_Dummy8.length-1;i>0;i-- )
+{
+if ( S_Dummy8[i]>=S_Dummy9[i] )
+{
+S_Dummy11[i]=S_Dummy8[i]-S_Dummy9[i];
+}
+else
+{
+S_Dummy11[i]=S_Dummy8[i]+10-S_Dummy9[i];
+S_Dummy8[i-1]=S_Dummy8[i-1]-1;
+}
+}
+S_Dummy11[0]=S_Dummy8[0]-S_Dummy9[0];
+}
+else
+{
+for ( int i=S_Dummy9.length-1;i>0;i-- )
+{
+if ( S_Dummy9[i]>=S_Dummy8[i] )
+{
+S_Dummy11[i]=S_Dummy9[i]-S_Dummy8[i];
+}
+else
+{
+S_Dummy11[i]=S_Dummy9[i]+10-S_Dummy8[i];
+S_Dummy9[i-1]=S_Dummy9[i-1]-1;
+}
+}
+S_Dummy11[0]=S_Dummy9[0]-S_Dummy8[0];
+}
+}
+for ( int i=0;i<S_Dummy11.length;i++ )
+{
+if ( i==0 )
+{
+for ( int j=S_Dummy11[0];j!=0;j/=10 )
+{
+Difference=((char)((j%10)+48))+Difference;
+}
+}
+else
+{
+Difference=Difference+((char)(S_Dummy11[i]+48));
+}
+}
+if (S_Dummy13!=0 )
+{
+Difference=Difference.substring(0,Difference.length()-S_Dummy13)+'.'+Difference.substring(Difference.length()-S_Dummy13,Difference.length());
+}
+if ( (S_Dummy6==true && S_Dummy7==false) || (S_Dummy6==true && S_Dummy7==true && S_Dummy12==1) || (S_Dummy6==false && S_Dummy7==false && S_Dummy12==-1) )
+{
+Difference='-'+Difference;
+}
+return Difference;
+}
+else if ( S_Dummy1==-1 )
+{
+return "Error";
+}
+else
+{
+return "Error";
+}
+}
+private String Power(String Input)
+{
+int P_Dummy1=0, P_Dummy4=-1, P_Dummy5=-1, P_Dummy12=0,P_Dummy15=0;
+String P_Dummy2="", P_Dummy3="",Answer="",P_Dummy14="", P_Dummy16="";
+String P_Dummy8[][];
+int P_Dummy13[][];
+int P_Dummy9[],P_Dummy10[];
+long P_Dummy11[];
+boolean P_Dummy6=false, P_Dummy7=false;
+String Table[][]=new String[10][10];
+Table[0][0]="00";
+Table[0][1]="00";
+Table[0][2]="00";
+Table[0][3]="00";
+Table[0][4]="00";
+Table[0][5]="00";
+Table[0][6]="00";
+Table[0][7]="00";
+Table[0][8]="00";
+Table[0][9]="00";
+Table[1][0]="00";
+Table[1][1]="01";
+Table[1][2]="02";
+Table[1][3]="03";
+Table[1][4]="04";
+Table[1][5]="05";
+Table[1][6]="06";
+Table[1][7]="07";
+Table[1][8]="08";
+Table[1][9]="09";
+Table[2][0]="00";
+Table[2][1]="02";
+Table[2][2]="04";
+Table[2][3]="06";
+Table[2][4]="08";
+Table[2][5]="10";
+Table[2][6]="12";
+Table[2][7]="14";
+Table[2][8]="16";
+Table[2][9]="18";
+Table[3][0]="00";
+Table[3][1]="03";
+Table[3][2]="06";
+Table[3][3]="09";
+Table[3][4]="12";
+Table[3][5]="15";
+Table[3][6]="18";
+Table[3][7]="21";
+Table[3][8]="24";
+Table[3][9]="27";
+Table[4][0]="00";
+Table[4][1]="04";
+Table[4][2]="08";
+Table[4][3]="12";
+Table[4][4]="16";
+Table[4][5]="20";
+Table[4][6]="24";
+Table[4][7]="28";
+Table[4][8]="32";
+Table[4][9]="36";
+Table[5][0]="00";
+Table[5][1]="05";
+Table[5][2]="10";
+Table[5][3]="15";
+Table[5][4]="20";
+Table[5][5]="25";
+Table[5][6]="30";
+Table[5][7]="35";
+Table[5][8]="40";
+Table[5][9]="45";
+Table[6][0]="00";
+Table[6][1]="06";
+Table[6][2]="12";
+Table[6][3]="18";
+Table[6][4]="24";
+Table[6][5]="30";
+Table[6][6]="36";
+Table[6][7]="42";
+Table[6][8]="48";
+Table[6][9]="54";
+Table[7][0]="00";
+Table[7][1]="07";
+Table[7][2]="14";
+Table[7][3]="21";
+Table[7][4]="28";
+Table[7][5]="35";
+Table[7][6]="42";
+Table[7][7]="49";
+Table[7][8]="56";
+Table[7][9]="63";
+Table[8][0]="00";
+Table[8][1]="08";
+Table[8][2]="16";
+Table[8][3]="24";
+Table[8][4]="32";
+Table[8][5]="40";
+Table[8][6]="48";
+Table[8][7]="56";
+Table[8][8]="64";
+Table[8][9]="72";
+Table[9][0]="00";
+Table[9][1]="09";
+Table[9][2]="18";
+Table[9][3]="27";
+Table[9][4]="36";
+Table[9][5]="45";
+Table[9][6]="54";
+Table[9][7]="63";
+Table[9][8]="72";
+Table[9][9]="81";
+for ( int i=0;i<Input.length();i++ )
+{
+if ( Input.charAt(i)=='^' )
+{
+P_Dummy1=i;
+break;
+}
+}
+P_Dummy2=Input.substring(0,P_Dummy1);
+P_Dummy14=Input.substring(P_Dummy1+1,Input.length());
+if ( (Input.charAt(P_Dummy1-1)>=48 && Input.charAt(P_Dummy1-1)<=57 && Input.charAt(P_Dummy1+1)>=48 && Input.charAt(P_Dummy1+1)<=57 && P_Dummy14.indexOf('.')==-1) )
+{
+for ( int i=0;i<P_Dummy14.length();i++ )
+{
+P_Dummy15=(P_Dummy15*10)+(((int)(P_Dummy14.charAt(i)))-48);
+}
+P_Dummy3=P_Dummy2;
+P_Dummy16=P_Dummy2;
+for ( int l=1;l<P_Dummy15;l++ )
+{
+if ( P_Dummy2.charAt(0)=='-' )
+{
+P_Dummy6=true;
+P_Dummy2=P_Dummy2.substring(1,P_Dummy2.length());
+}
+if ( P_Dummy3.charAt(0)=='-' )
+{
+P_Dummy7=true;
+P_Dummy3=P_Dummy3.substring(1,P_Dummy3.length());
+}
+for ( int i=0;i<P_Dummy2.length();i++ )
+{
+if ( P_Dummy2.charAt(i)=='.' )
+{
+P_Dummy4=i;
+break;
+}
+}
+for ( int i=0;i<P_Dummy3.length();i++ )
+{
+if ( P_Dummy3.charAt(i)=='.' )
+{
+P_Dummy5=i;
+break;
+}
+}
+if ( P_Dummy4!=-1)
+{
+P_Dummy2=P_Dummy2.substring(0,P_Dummy4)+P_Dummy2.substring(P_Dummy4+1,P_Dummy2.length());
+}
+if ( P_Dummy5!=-1)
+{
+P_Dummy3=P_Dummy3.substring(0,P_Dummy5)+P_Dummy3.substring(P_Dummy5+1,P_Dummy3.length());
+}
+P_Dummy8=new String[P_Dummy2.length()][P_Dummy3.length()];
+P_Dummy9=new int[P_Dummy2.length()];
+P_Dummy10=new int[P_Dummy3.length()];
+for ( int i=0;i<P_Dummy2.length();i++ )
+{
+P_Dummy9[i]= ((int)(P_Dummy2.charAt(i)))-48;
+}
+for ( int i=0;i<P_Dummy3.length();i++ )
+{
+P_Dummy10[i]= ((int)(P_Dummy3.charAt(i)))-48;
+}
+for ( int i=0;i<P_Dummy3.length();i++ )
+{
+for ( int j=0;j<P_Dummy2.length();j++ )
+{
+P_Dummy8[j][i]=Table[P_Dummy9[j]][P_Dummy10[i]];
+}
+}
+P_Dummy11=new long[P_Dummy9.length+P_Dummy10.length];
+P_Dummy13=new int[2*Math.min(P_Dummy2.length(),P_Dummy3.length())][P_Dummy2.length()+P_Dummy3.length()];
+for (int i=0;i<P_Dummy11.length;i++)
+{
+P_Dummy12=0;
+for (int j=0;j<P_Dummy9.length;j++ )
+{
+for (int k=0;k<P_Dummy10.length;k++ )
+{
+if (j+k==i)
+{
+P_Dummy13[P_Dummy12++][i]=((int)(P_Dummy8[j][k].charAt(0)))-48;
+}
+if (j+k==i-1)
+{
+P_Dummy13[P_Dummy12++][i]=((int)(P_Dummy8[j][k].charAt(1)))-48;
+}
+}
+}
+}
+P_Dummy12=0;
+for (int i=0;i<P_Dummy9.length+P_Dummy10.length;i++ )
+{
+for ( int j=0;j<2*Math.min(P_Dummy9.length,P_Dummy10.length);j++ )
+{
+P_Dummy11[P_Dummy12]=P_Dummy11[P_Dummy12]+P_Dummy13[j][i];
+}
+P_Dummy12++;
+}
+for ( int i=P_Dummy9.length+P_Dummy10.length-1;i>0;i-- )
+{
+if (P_Dummy11[i]>9)
+{
+P_Dummy11[i-1]=P_Dummy11[i-1]+(P_Dummy11[i]/10);
+P_Dummy11[i]=P_Dummy11[i]%10;
+}
+}
+Answer="";
+for ( long i=P_Dummy11[0];i!=0;i/=10 )
+{
+Answer=((char)((i%10)+48))+Answer;
+}
+for ( int i=1;i<P_Dummy9.length+P_Dummy10.length;i++ )
+{
+Answer=Answer+((char)((P_Dummy11[i])+48));
+}
+if (P_Dummy4!=-1 && P_Dummy5!=-1)
+{
+Answer=Answer.substring(0,Answer.length()-(P_Dummy2.length()-P_Dummy4+P_Dummy3.length()-P_Dummy5))+"."+Answer.substring(Answer.length()-(P_Dummy2.length()-P_Dummy4+P_Dummy3.length()-P_Dummy5),Answer.length());
+}
+else if (P_Dummy4!=-1 && P_Dummy5==-1)
+{
+Answer=Answer.substring(0,Answer.length()-(P_Dummy2.length()-P_Dummy4))+"."+Answer.substring(Answer.length()-(P_Dummy2.length()-P_Dummy4),Answer.length());
+}
+else if (P_Dummy4==-1 && P_Dummy5!=-1)
+{
+Answer=Answer.substring(0,Answer.length()-(P_Dummy3.length()-P_Dummy5))+"."+Answer.substring(Answer.length()-(P_Dummy3.length()-P_Dummy5),Answer.length());
+}
+P_Dummy3=Answer;
+P_Dummy2=P_Dummy16;
+}
+if (Input.charAt(0)=='-' && P_Dummy15%2==1)
+{
+Answer='-'+Answer;
+}
+return Answer;
+}
+else
+{
+return "Error";
+}
+}
+private String Remainder(String Input)
+{
+String R_Dummy2="",R_Dummy3="";
+int R_Dummy4[],R_Dummy5[],Dummy1[],Dummy2[],Dummy3[];
+int R_Dummy8=0,l=0,R_Dummy6=0,R_Dummy7=0,R_Dummy1=0;
+String R_Dummy9="",R_Dummy10="";
+for ( int i=0;i<Input.length();i++ )
+{
+if ( Input.charAt(i)=='%')
+{
+R_Dummy1=1;
+R_Dummy10="0"+Input.substring(0,i);
+R_Dummy9="0"+Input.substring(i+1,Input.length());
+}
+else if (Input.indexOf('%')==-1)
+{
+R_Dummy1=-1;
+}
+}
+if ( R_Dummy1==1 && Input.indexOf('-')==-1 && Input.indexOf('.')==-1 )
+{
+if (R_Dummy10.length()<R_Dummy9.length() )
+{
+for ( int i=1;i<=R_Dummy9.length()-R_Dummy10.length();i++ )
+{
+R_Dummy10="0"+R_Dummy10;
+}
+}
+R_Dummy2=R_Dummy9;
+R_Dummy3=R_Dummy10;
+R_Dummy8=1;
+R_Dummy6=R_Dummy2.length();
+R_Dummy7=R_Dummy3.length();
+R_Dummy4=new int[R_Dummy9.length()];
+R_Dummy5=new int[R_Dummy10.length()+1];
+Dummy1=new int[R_Dummy9.length()];
+Dummy2=new int[R_Dummy9.length()];
+Dummy3=new int[R_Dummy9.length()];
+for ( int i=0;i<R_Dummy2.length();i++ )
+{
+R_Dummy4[i]=R_Dummy2.charAt(i)-48;
+}
+for ( int i=0;i<R_Dummy3.length();i++ )
+{
+R_Dummy5[i]=R_Dummy3.charAt(i)-48;
+}
+for (int i=0;i<Dummy1.length;i++ )
+{
+if (i<R_Dummy4.length)
+{
+Dummy1[i]=R_Dummy4[i];
+}
+if (i<R_Dummy5.length)
+{
+Dummy2[i]=R_Dummy5[i];
+}
+l=i;
+}
+int n=0;
+int Dummy24=0;
+String R_Dummy11="",R_Dummy12="",R_Dummy13="";
+for ( int k=0;l!=R_Dummy5.length-1;k++ )
+{
+int j=0;
+for ( int i=9;i>=0;i-- )
+{
+for ( int m=Dummy1.length-1;m>=0;m-- )
+{
+Dummy1[m]=0;
+}
+for ( int m=R_Dummy4.length-1;m>=0;m-- )
+{
+Dummy1[m]=R_Dummy4[m]*i;
+}
+for ( int m=Dummy1.length-1;m>0;m-- )
+{
+Dummy1[m-1]+=Dummy1[m]/10;
+Dummy1[m]=Dummy1[m]%10;
+}
+boolean t=true;
+for ( int m=0;m<Dummy2.length;m++ )
+{
+if ( Dummy2[m]<Dummy1[m] )
+{
+t=false;
+break;
+}
+else if ( Dummy2[m]>Dummy1[m] )
+{
+t=true;
+break;
+}
+}
+if ( t==true )
+{
+j=i;
+break;
+}
+}
+if (R_Dummy6==R_Dummy7 && k==1)
+{
+R_Dummy11=R_Dummy11+'.';
+}
+if ( R_Dummy7>R_Dummy6 && k==R_Dummy7-R_Dummy6+1 )
+{
+R_Dummy11=R_Dummy11+'.';
+}
+if ( R_Dummy6>R_Dummy7 && k==2 )
+{
+R_Dummy11=R_Dummy11+'.';
+}
+if (j!=0)
+{
+R_Dummy11=R_Dummy11+(char)(j+48);
+for ( int o=Dummy2.length-1;o>0;o--)
+{
+if ( Dummy2[o]>=Dummy1[o] )
+{
+Dummy3[o]=Dummy2[o]-Dummy1[o];
+}
+else
+{
+Dummy2[o-1]=Dummy2[o-1]-1;
+Dummy3[o]=Dummy2[o]+10-Dummy1[o];
+}
+}
+for ( int p=0;p<Dummy1.length;p++ )
+{
+Dummy2[p]=0;
+}
+for ( int p=0;p<Dummy1.length;p++ )
+{
+Dummy2[p]=Dummy3[p];
+}
+for ( int p=1;p<Dummy2.length;p++ )
+{
+Dummy2[p-1]=Dummy2[p];
+}
+if (l<R_Dummy5.length-1)
+{
+Dummy2[Dummy2.length-1]=R_Dummy5[++l];
+}
+}
+else
+{
+R_Dummy11=R_Dummy11+'0';
+for ( int p=1;p<Dummy2.length;p++ )
+{
+Dummy2[p-1]=Dummy2[p];
+}
+if (l<R_Dummy5.length-1)
+{
+Dummy2[Dummy2.length-1]=R_Dummy5[++l];
+}
+}
+}
+if ( R_Dummy6>R_Dummy7 )
+{
+int Dummy12=R_Dummy11.length();
+for ( int i=0;i<R_Dummy11.length();i++)
+{
+if (R_Dummy11.charAt(i)!='0')
+{
+Dummy12=i;
+break;
+}
+}
+R_Dummy11=R_Dummy11.substring(Dummy12,R_Dummy11.length());
+for ( int i=0;i>=(R_Dummy7-R_Dummy6)+Dummy24;i-- )
+{
+R_Dummy12='0'+R_Dummy12;
+}
+R_Dummy12="0."+R_Dummy12;
+}
+if (R_Dummy12.length()==0)
+{
+R_Dummy13=R_Dummy11;
+}
+else
+{
+R_Dummy13=R_Dummy12;
+}
+if (R_Dummy9.length()<R_Dummy13.length() )
+{
+for ( int i=1;i<=R_Dummy13.length()-R_Dummy9.length();i++ )
+{
+R_Dummy9="0"+R_Dummy9;
+}
+}
+char Dummy4[]=new char[R_Dummy9.length()];
+char Dummy5[]=new char[R_Dummy13.length()];
+for ( int i=0;i<R_Dummy9.length();i++ )
+{
+Dummy4[i]=R_Dummy9.charAt(i);
+}
+for ( int i=0;i<R_Dummy13.length();i++ )
+{
+Dummy5[i]=R_Dummy13.charAt(i);
+}
+String Table[][]=new String[10][10];
+Table[0][0]="00";
+Table[0][1]="00";
+Table[0][2]="00";
+Table[0][3]="00";
+Table[0][4]="00";
+Table[0][5]="00";
+Table[0][6]="00";
+Table[0][7]="00";
+Table[0][8]="00";
+Table[0][9]="00";
+Table[1][0]="00";
+Table[1][1]="01";
+Table[1][2]="02";
+Table[1][3]="03";
+Table[1][4]="04";
+Table[1][5]="05";
+Table[1][6]="06";
+Table[1][7]="07";
+Table[1][8]="08";
+Table[1][9]="09";
+Table[2][0]="00";
+Table[2][1]="02";
+Table[2][2]="04";
+Table[2][3]="06";
+Table[2][4]="08";
+Table[2][5]="10";
+Table[2][6]="12";
+Table[2][7]="14";
+Table[2][8]="16";
+Table[2][9]="18";
+Table[3][0]="00";
+Table[3][1]="03";
+Table[3][2]="06";
+Table[3][3]="09";
+Table[3][4]="12";
+Table[3][5]="15";
+Table[3][6]="18";
+Table[3][7]="21";
+Table[3][8]="24";
+Table[3][9]="27";
+Table[4][0]="00";
+Table[4][1]="04";
+Table[4][2]="08";
+Table[4][3]="12";
+Table[4][4]="16";
+Table[4][5]="20";
+Table[4][6]="24";
+Table[4][7]="28";
+Table[4][8]="32";
+Table[4][9]="36";
+Table[5][0]="00";
+Table[5][1]="05";
+Table[5][2]="10";
+Table[5][3]="15";
+Table[5][4]="20";
+Table[5][5]="25";
+Table[5][6]="30";
+Table[5][7]="35";
+Table[5][8]="40";
+Table[5][9]="45";
+Table[6][0]="00";
+Table[6][1]="06";
+Table[6][2]="12";
+Table[6][3]="18";
+Table[6][4]="24";
+Table[6][5]="30";
+Table[6][6]="36";
+Table[6][7]="42";
+Table[6][8]="48";
+Table[6][9]="54";
+Table[7][0]="00";
+Table[7][1]="07";
+Table[7][2]="14";
+Table[7][3]="21";
+Table[7][4]="28";
+Table[7][5]="35";
+Table[7][6]="42";
+Table[7][7]="49";
+Table[7][8]="56";
+Table[7][9]="63";
+Table[8][0]="00";
+Table[8][1]="08";
+Table[8][2]="16";
+Table[8][3]="24";
+Table[8][4]="32";
+Table[8][5]="40";
+Table[8][6]="48";
+Table[8][7]="56";
+Table[8][8]="64";
+Table[8][9]="72";
+Table[9][0]="00";
+Table[9][1]="09";
+Table[9][2]="18";
+Table[9][3]="27";
+Table[9][4]="36";
+Table[9][5]="45";
+Table[9][6]="54";
+Table[9][7]="63";
+Table[9][8]="72";
+Table[9][9]="81";
+String Dummy6[][]=new String [Dummy4.length][Dummy5.length];
+for (int i=0;i<Dummy4.length;i++ )
+{
+for ( int j=0;j<Dummy5.length;j++ )
+{
+Dummy6[i][j]=Table[((int)(Dummy4[i]))-48][((int)(Dummy5[j]))-48];
+}
+}
+int Dummy7[][]=new
+int[2*Math.min(Dummy4.length,Dummy5.length)][Dummy4.length+Dummy5.length];
+int Dummy8[]=new int[Dummy4.length+Dummy5.length];
+for (int i=0;i<Dummy4.length+Dummy5.length;i++)
+{
+int Dummy9=0;
+for (int j=0;j<Dummy4.length;j++ )
+{
+for (int k=0;k<Dummy5.length;k++ )
+{
+
+if (j+k==i)
+{
+Dummy7[Dummy9++][i]=((int)(Dummy6[j][k].charAt(0)))-48;
+}
+if (j+k==i-1)
+{
+Dummy7[Dummy9++][i]=((int)(Dummy6[j][k].charAt(1)))-48;
+}
+}
+}
+}
+int Dummy10=0,Dummy11=0;
+for (int i=0;i<Dummy4.length+Dummy5.length;i++ )
+{
+for ( int j=0;j<2*Math.min(Dummy4.length,Dummy5.length);j++ )
+{
+Dummy8[Dummy10]=Dummy8[Dummy10]+Dummy7[j][i];
+}
+Dummy10++;
+}
+for ( int i=Dummy4.length+Dummy5.length-1;i>0;i-- )
+{
+if (Dummy8[i]>9)
+{
+Dummy8[i-1]=Dummy8[i-1]+(Dummy8[i]/10);
+Dummy8[i]=Dummy8[i]%10;
+}
+}
+String R_Dummy14="";
+for ( int i=0;i<Dummy4.length+Dummy5.length;i++ )
+{
+
+String Dummy="";
+if ((long)Dummy8[i]==0)
+{
+Dummy="0";
+}
+else
+{
+for ( long q=(long)Dummy8[i];q!=0;q/=10 )
+{
+Dummy=((char)((q%10)+48))+Dummy;
+}
+}
+R_Dummy14=R_Dummy14+Dummy;
+}
+for (int i=0;i<R_Dummy14.length();i++)
+{
+if ( R_Dummy14.charAt(i)!='0' )
+{
+Dummy11=i;
+break;
+}
+}
+R_Dummy14=R_Dummy14.substring(Dummy11,R_Dummy14.length());
+String a=R_Dummy10,b=R_Dummy14;
+String R_Dummy15="";
+a=Remove_Zeros(a);
+b=Remove_Zeros(b);
+long Dummy13[],Dummy14[];
+int Dummy15=0,Dummy16=0;
+if (a.length()>b.length())
+{
+Dummy13=new long[a.length()];
+Dummy14=new long[a.length()];
+Dummy15=a.length()-1;
+Dummy16=b.length()-1;
+for ( int i=a.length()-1;i>=0;i--)
+{
+if (Dummy15>=0)
+{
+Dummy13[i]=((int)(a.charAt(Dummy15)))-48;
+Dummy15--;
+}
+if (Dummy16>=0)
+{
+Dummy14[i]=((int)(b.charAt(Dummy16)))-48;
+Dummy16--;
+}
+}
+}
+else if (a.length()<b.length())
+{
+Dummy13=new long[b.length()];
+Dummy14=new long[b.length()];
+Dummy15=b.length()-1;
+Dummy16=a.length()-1;
+for ( int i=b.length()-1;i>=0;i--)
+{
+if (Dummy15>=0)
+{
+Dummy13[i]=((int)(b.charAt(Dummy15)))-48;
+Dummy15--;
+}
+if (Dummy16>=0)
+{
+Dummy14[i]=((int)(a.charAt(Dummy16)))-48;
+Dummy16--;
+}
+}
+}
+else
+{
+if (Compare(a,b).compareTo(a)==0)
+{
+Dummy13=new long[a.length()];
+Dummy14=new long[a.length()];
+for ( int i=a.length()-1;i>=0;i--)
+{
+Dummy13[i]=((int)(a.charAt(i)))-48;
+Dummy14[i]=((int)(b.charAt(i)))-48;
+}
+}
+else
+{
+Dummy13=new long[a.length()];
+Dummy14=new long[a.length()];
+for ( int i=a.length()-1;i>=0;i--)
+{
+Dummy13[i]=((int)(b.charAt(i)))-48;
+Dummy14[i]=((int)((a.charAt(i))))-48;
+}
+}
+}
+for ( int i=Dummy13.length-1;i>0;i-- )
+{
+if (Dummy13[i]>=Dummy14[i])
+{
+String Dummy="";
+if (Dummy13[i]-Dummy14[i]==0)
+{
+Dummy="0";
+}
+else
+{
+for ( long q=Dummy13[i]-Dummy14[i];q!=0;q/=10 )
+{
+Dummy=((char)((q%10)+48))+Dummy;
+}
+}
+R_Dummy15=Dummy+R_Dummy15;
+}
+else
+{
+Dummy13[i-1]=Dummy13[i-1]-1;
+Dummy13[i]=Dummy13[i]+10;
+String Dummy="";
+if (Dummy13[i]-Dummy14[i]==0)
+{
+Dummy="0";
+}
+else
+{
+for ( long q=Dummy13[i]-Dummy14[i];q!=0;q/=10 )
+{
+Dummy=((char)((q%10)+48))+Dummy;
+}
+}
+R_Dummy15=Dummy+R_Dummy15;
+}
+}
+String Dummy="";
+if (Dummy13[0]-Dummy14[0]==0)
+{
+Dummy="0";
+}
+else
+{
+for ( long q=Dummy13[0]-Dummy14[0];q!=0;q/=10 )
+{
+Dummy=((char)((q%10)+48))+Dummy;
+}
+}
+R_Dummy15=Dummy+R_Dummy15;
+Remove_Zeros(R_Dummy15);
+if ( a.length()<b.length() )
+{
+R_Dummy15='-'+R_Dummy15;
+}
+else if (a.length()==b.length() && Compare(a,b).compareTo(b)==0)
+{
+R_Dummy15='-'+R_Dummy15;
+}
+String R_Dummy16=Remove_Zeros(R_Dummy15);
+if ( R_Dummy16.compareTo("")==0)
+{
+R_Dummy16="0";
+}
+return R_Dummy16;
+}
+else
+{
+return "Error";
+}
+}
+private String Multiplication(String Input)
+{
+int M_Dummy1=0, M_Dummy4=-1, M_Dummy5=-1, M_Dummy12=0;
+String M_Dummy2="", M_Dummy3="",Product="";
+String M_Dummy8[][];
+int M_Dummy13[][];
+int M_Dummy9[],M_Dummy10[];
+long M_Dummy11[];
+boolean M_Dummy6=false, M_Dummy7=false;
+String Table[][]=new String[10][10];
+Table[0][0]="00";
+Table[0][1]="00";
+Table[0][2]="00";
+Table[0][3]="00";
+Table[0][4]="00";
+Table[0][5]="00";
+Table[0][6]="00";
+Table[0][7]="00";
+Table[0][8]="00";
+Table[0][9]="00";
+Table[1][0]="00";
+Table[1][1]="01";
+Table[1][2]="02";
+Table[1][3]="03";
+Table[1][4]="04";
+Table[1][5]="05";
+Table[1][6]="06";
+Table[1][7]="07";
+Table[1][8]="08";
+Table[1][9]="09";
+Table[2][0]="00";
+Table[2][1]="02";
+Table[2][2]="04";
+Table[2][3]="06";
+Table[2][4]="08";
+Table[2][5]="10";
+Table[2][6]="12";
+Table[2][7]="14";
+Table[2][8]="16";
+Table[2][9]="18";
+Table[3][0]="00";
+Table[3][1]="03";
+Table[3][2]="06";
+Table[3][3]="09";
+Table[3][4]="12";
+Table[3][5]="15";
+Table[3][6]="18";
+Table[3][7]="21";
+Table[3][8]="24";
+Table[3][9]="27";
+Table[4][0]="00";
+Table[4][1]="04";
+Table[4][2]="08";
+Table[4][3]="12";
+Table[4][4]="16";
+Table[4][5]="20";
+Table[4][6]="24";
+Table[4][7]="28";
+Table[4][8]="32";
+Table[4][9]="36";
+Table[5][0]="00";
+Table[5][1]="05";
+Table[5][2]="10";
+Table[5][3]="15";
+Table[5][4]="20";
+Table[5][5]="25";
+Table[5][6]="30";
+Table[5][7]="35";
+Table[5][8]="40";
+Table[5][9]="45";
+Table[6][0]="00";
+Table[6][1]="06";
+Table[6][2]="12";
+Table[6][3]="18";
+Table[6][4]="24";
+Table[6][5]="30";
+Table[6][6]="36";
+Table[6][7]="42";
+Table[6][8]="48";
+Table[6][9]="54";
+Table[7][0]="00";
+Table[7][1]="07";
+Table[7][2]="14";
+Table[7][3]="21";
+Table[7][4]="28";
+Table[7][5]="35";
+Table[7][6]="42";
+Table[7][7]="49";
+Table[7][8]="56";
+Table[7][9]="63";
+Table[8][0]="00";
+Table[8][1]="08";
+Table[8][2]="16";
+Table[8][3]="24";
+Table[8][4]="32";
+Table[8][5]="40";
+Table[8][6]="48";
+Table[8][7]="56";
+Table[8][8]="64";
+Table[8][9]="72";
+Table[9][0]="00";
+Table[9][1]="09";
+Table[9][2]="18";
+Table[9][3]="27";
+Table[9][4]="36";
+Table[9][5]="45";
+Table[9][6]="54";
+Table[9][7]="63";
+Table[9][8]="72";
+Table[9][9]="81";
+for ( int i=0;i<Input.length();i++ )
+{
+if ( Input.charAt(i)=='*' )
+{
+M_Dummy1=i;
+break;
+}
+}
+if ( (Input.charAt(M_Dummy1-1)>=48 && Input.charAt(M_Dummy1-1)<=57 && Input.charAt(M_Dummy1+1)=='-') || (Input.charAt(M_Dummy1-1)>=48 && Input.charAt(M_Dummy1-1)<=57 && Input.charAt(M_Dummy1+1)>=48 && Input.charAt(M_Dummy1+1)<=57) )
+{
+M_Dummy2=Input.substring(0,M_Dummy1);
+M_Dummy3=Input.substring(M_Dummy1+1,Input.length());
+if ( M_Dummy2.charAt(0)=='-' )
+{
+M_Dummy6=true;
+M_Dummy2=M_Dummy2.substring(1,M_Dummy2.length());
+}
+if ( M_Dummy3.charAt(0)=='-' )
+{
+M_Dummy7=true;
+M_Dummy3=M_Dummy3.substring(1,M_Dummy3.length());
+}
+for ( int i=0;i<M_Dummy2.length();i++ )
+{
+if ( M_Dummy2.charAt(i)=='.' )
+{
+M_Dummy4=i;
+break;
+}
+}
+for ( int i=0;i<M_Dummy3.length();i++ )
+{
+if ( M_Dummy3.charAt(i)=='.' )
+{
+M_Dummy5=i;
+break;
+}
+}
+if ( M_Dummy4!=-1)
+{
+M_Dummy2=M_Dummy2.substring(0,M_Dummy4)+M_Dummy2.substring(M_Dummy4+1,M_Dummy2.length());
+}
+if ( M_Dummy5!=-1)
+{
+M_Dummy3=M_Dummy3.substring(0,M_Dummy5)+M_Dummy3.substring(M_Dummy5+1,M_Dummy3.length());
+}
+M_Dummy8=new String[M_Dummy2.length()][M_Dummy3.length()];
+M_Dummy9=new int[M_Dummy2.length()];
+M_Dummy10=new int[M_Dummy3.length()];
+for ( int i=0;i<M_Dummy2.length();i++ )
+{
+M_Dummy9[i]= ((int)(M_Dummy2.charAt(i)))-48;
+}
+for ( int i=0;i<M_Dummy3.length();i++ )
+{
+M_Dummy10[i]= ((int)(M_Dummy3.charAt(i)))-48;
+}
+for ( int i=0;i<M_Dummy3.length();i++ )
+{
+for ( int j=0;j<M_Dummy2.length();j++ )
+{
+M_Dummy8[j][i]=Table[M_Dummy9[j]][M_Dummy10[i]];
+}
+}
+M_Dummy11=new long[M_Dummy9.length+M_Dummy10.length];
+M_Dummy13=new int[2*Math.min(M_Dummy2.length(),M_Dummy3.length())][M_Dummy2.length()+M_Dummy3.length()];
+for (int i=0;i<M_Dummy11.length;i++)
+{
+M_Dummy12=0;
+for (int j=0;j<M_Dummy9.length;j++ )
+{
+for (int k=0;k<M_Dummy10.length;k++ )
+{
+if (j+k==i)
+{
+M_Dummy13[M_Dummy12++][i]=((int)(M_Dummy8[j][k].charAt(0)))-48;
+}
+if (j+k==i-1)
+{
+M_Dummy13[M_Dummy12++][i]=((int)(M_Dummy8[j][k].charAt(1)))-48;
+}
+}
+}
+}
+M_Dummy12=0;
+for (int i=0;i<M_Dummy9.length+M_Dummy10.length;i++ )
+{
+for ( int j=0;j<2*Math.min(M_Dummy9.length,M_Dummy10.length);j++ )
+{
+M_Dummy11[M_Dummy12]=M_Dummy11[M_Dummy12]+M_Dummy13[j][i];
+}
+M_Dummy12++;
+}
+for ( int i=M_Dummy9.length+M_Dummy10.length-1;i>0;i-- )
+{
+if (M_Dummy11[i]>9)
+{
+M_Dummy11[i-1]=M_Dummy11[i-1]+(M_Dummy11[i]/10);
+M_Dummy11[i]=M_Dummy11[i]%10;
+}
+}
+for ( int i=0;i<M_Dummy9.length+M_Dummy10.length;i++ )
+{
+Product=Product+((char)((M_Dummy11[i])+48));
+}
+if (M_Dummy4!=-1 && M_Dummy5!=-1)
+{
+Product=Product.substring(0,Product.length()-(M_Dummy2.length()-M_Dummy4+M_Dummy3.length()-M_Dummy5))+"."+Product.substring(Product.length()-(M_Dummy2.length()-M_Dummy4+M_Dummy3.length()-M_Dummy5),Product.length());
+}
+else if (M_Dummy4!=-1 && M_Dummy5==-1)
+{
+Product=Product.substring(0,Product.length()-(M_Dummy2.length()-M_Dummy4))+"."+Product.substring(Product.length()-(M_Dummy2.length()-M_Dummy4),Product.length());
+}
+else if (M_Dummy4==-1 && M_Dummy5!=-1)
+{
+Product=Product.substring(0,Product.length()-(M_Dummy3.length()-M_Dummy5))+"."+Product.substring(Product.length()-(M_Dummy3.length()-M_Dummy5),Product.length());
+}
+if (( M_Dummy6==true && M_Dummy7==false ) || (M_Dummy6==false && M_Dummy7==true))
+{
+Product="-"+Product;
+}
+return Product;
+}
+else if ( M_Dummy1==-1 )
+{
+return "Error";
+}
+else
+{
+return "Error";
+}
+}
+private String Remove_Zeros( String a )
+{
+int Dummy12=a.length();
+for ( int i=0;i<a.length();i++)
+{
+if (a.charAt(i)!='0')
+{
+Dummy12=i;
+break;
+}
+}
+return a.substring(Dummy12,a.length());
+}
+private String Compare ( String a, String b )
+{
+String Dummy13="";
+a=Remove_Zeros(a);
+b=Remove_Zeros(b);
+if (a.length()>b.length())
+{
+Dummy13=a;
+}
+else if (a.length()<b.length())
+{
+Dummy13=b;
+}
+else
+{
+for (int i=0;i<a.length();i++)
+{
+if ((int)(a.charAt(i))>(int)(b.charAt(i)))
+{
+Dummy13=a;
+break;
+}
+else if ((int)(a.charAt(i))<(int)(b.charAt(i)))
+{
+Dummy13=b;
+break;
+}
+else if ((int)(a.charAt(i))==(int)(b.charAt(i)) && i==a.length()-1)
+{
+Dummy13="Equal";
+}
+}
+}
+return Dummy13;
+}
+public static void main(String[] args)
+{
+SwingUtilities.invokeLater(CalculatorGUI::new);
+}
+}
